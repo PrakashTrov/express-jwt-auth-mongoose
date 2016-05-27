@@ -28,8 +28,7 @@ module.exports = function (username, password) {
     mongoose.connection.on('error', function () {
         console.log('Mongoose connection error', arguments);
     });
-    mongoose.connection.once('open', function callback() {
-        console.log("Mongoose connected to the database");
+    console.log("Mongoose connected to the database");
         user.username = username;
         user.password = password;
         user.save(function (err) {
@@ -40,7 +39,9 @@ module.exports = function (username, password) {
 
             }
         });
-    });
+    // mongoose.connection.once('open', function callback() {
+        
+    // });
 
-    return user
-};
+ //   return user
+}
