@@ -59,7 +59,6 @@ router.route("/create").post( function (req, res, next){
         password = req.body.password;
         console.log(username)
         var data = require("./create_user")(username, password)
-        console.log("sdfsdf", data)
         return res.status(201).json(data);
 });
 app.use(router)

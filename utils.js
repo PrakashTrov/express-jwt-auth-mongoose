@@ -4,7 +4,7 @@ var debug = require('debug')('app:utils:' + process.pid),
     path = require('path'),
     util = require('util'),
     redis = require("redis"),
-    client = redis.createClient(),
+    client = redis.createClient('6379', process.env.CONTAINER),
     _ = require("lodash"),
     config = require("./config.json"),
     jsonwebtoken = require("jsonwebtoken"),
@@ -14,10 +14,20 @@ var debug = require('debug')('app:utils:' + process.pid),
 
 client.on('error', function (err) {
     debug(err);
+    process.exit(1);
 });
 
 client.on('connect', function () {
     debug("Redis successfully connected");
+});
+
+client.get(this.testKey, function(err,res) {
+  if(err){
+   process.exit(1);
+  } 
+  else{
+   console.log("hey its conected")
+  }
 });
 
 /**
