@@ -25,7 +25,7 @@ mongoose.connection.on('error', function () {
 mongoose.connection.once('open', function callback() {
     debug("Mongoose connected to the database");
 });
-
+mongoose.connection.close()
 debug("Initializing express");
 var express = require('express'), app = express();
 
@@ -50,12 +50,27 @@ app.use(function (req, res, next) {
 var jwtCheck = jwt({
     secret: config.secret
 });
+
+var Router = require("express").Router
+var router = new Router();
+router.route("/create").post( function (req, res, next){
+       
+        var username = req.body.username,
+        password = req.body.password;
+        console.log(username)
+        var data = require("./create_user")(username, password)
+        console.log("sdfsdf", data)
+        return res.status(201).json(data);
+});
+app.use(router)
+
 jwtCheck.unless = unless;
 
 app.use(jwtCheck.unless({path: '/api/login' }));
 app.use(utils.middleware().unless({path: '/api/login' }));
 
 app.use("/api", require(path.join(__dirname, "routes", "default.js"))());
+
 
 // all other requests redirect to 404
 app.all("*", function (req, res, next) {
@@ -103,3 +118,18 @@ require('https').createServer({
 }, app).listen(https_port, function () {
     debug("HTTPS Server listening on port: %s, in %s mode", https_port, app.get('env'));
 });
+
+// var Client = require('node-rest-client').Client;
+ 
+// var client = new Client();
+ 
+// // set content-type header and data as json in args parameter 
+// var args = {
+//     data: { test: "hello" },
+//     headers: { "Content-Type": "application/json" }
+// };
+
+// client.post("http://localhost:3000/api/demo", args, function (data, response) {
+//     console.log(data);
+//     console.log(response);
+// });
